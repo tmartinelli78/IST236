@@ -1,7 +1,7 @@
-import { useFonts } from "expo-font";
 import { StatusBar } from "expo-status-bar";
-import { useCallback } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { useFonts } from "expo-font";
+import { useCallback } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
@@ -10,27 +10,31 @@ import SongsOveviewScreen from "./screens/SongsOverviewScreen";
 import Colors from "./constants/colors";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Entypo } from "@expo/vector-icons";
+import FavoritesScreen from "./screens/FavoritesScreen";
+import SongDetailScreen from "./screens/SongDetailScreen";
+import { Provider } from "react-redux";
+import { store } from "./store/redux/store";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
-function DrawerNavigator(){
+function DrawerNavigator() {
   return (
     <Drawer.Navigator
       initialRouteName="SongGenres"
       screenOptions={{
-        headerStyle: { backgroundColor: Colors.primary800},
+        headerStyle: { backgroundColor: Colors.primary800 },
         headerTintColor: "white",
         headerTitleStyle: {
           fontFamily: "house",
           fontSize: 40,
-          color: Colors.accent800
+          color: Colors.accent800,
         },
         sceneContainerStyle: { backgroundColor: Colors.primary800 },
-        drawerContentStyle: { backgroundColor:  Colors.primary500 },
+        drawerContentStyle: { backgroundColor: Colors.primary500 },
         drawerInactiveTintColor: Colors.primary300,
         drawerActiveTintColor: Colors.accent500,
-        drawerActiveBackgroundColor: Colors.primary800
+        drawerActiveBackgroundColor: Colors.primary800,
       }}
     >
       <Drawer.Screen
@@ -39,24 +43,24 @@ function DrawerNavigator(){
         options={{
           title: "Genres",
           drawerLabel: "Music Genres",
-          drawerIcon: ({color, size}) => (
+          drawerIcon: ({ color, size }) => (
             <Entypo name="list" color={color} size={size} />
-          )
+          ),
         }}
       />
-      <Drawer.Screen 
+      <Drawer.Screen
         name="FavoriteSongs"
         component={FavoritesScreen}
         options={{
           title: "Favorites",
           drawerLabel: "My Favorites",
-          drawerIcon: ({color, size}) => (
-            <Entypo name="list" color={color} size={size} />
-          )
+          drawerIcon: ({ color, size }) => (
+            <Entypo name="star" color={color} size={size} />
+          ),
         }}
       />
     </Drawer.Navigator>
-  )
+  );
 }
 
 export default function App() {
@@ -74,13 +78,14 @@ export default function App() {
     }
   }, [fontsLoaded, fontError]);
 
-  if (!fontsLoaded && fontError) {
+  if (!fontsLoaded && !fontError) {
     return null;
   } else {
     return (
       <>
         <StatusBar style="light" />
-        <NavigationContainer>
+        <Provider store={store}>
+           <NavigationContainer>
           <Stack.Navigator
             initialRouteName="SongGenres"
             screenOptions={{
@@ -101,19 +106,18 @@ export default function App() {
                 headerShown: false,
               }}
             />
-            <Stack.Screen 
-            name="SongsOverview" 
-            component={SongsOveviewScreen} 
-            options={{
-              headerBackTitleVisible: false
-            }}
+            <Stack.Screen
+              name="SongsOverview"
+              component={SongsOveviewScreen}
+              options={{
+                headerBackTitleVisible: false,
+              }}
             />
-            <Stack.Screen 
-            name="SongDetail" 
-            component={SongsOveviewScreen} 
-            />
+            <Stack.Screen name="SongDetail" component={SongsOveviewScreen} />
           </Stack.Navigator>
         </NavigationContainer>
+        </Provider>
+       
       </>
     );
   }

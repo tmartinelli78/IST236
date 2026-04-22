@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import { View, StyleSheet, Pressable, Text, Image } from "react-native";
 
 
@@ -9,6 +10,14 @@ function formatTime(seconds){
     return `${minutes}:${paddedSeconds}`;
 }
 function SongItem(props) {
+
+  const navigation= useNavigation();
+  
+  function selectedSongHandler(){
+    navigation.navigate("SongDetail", {
+      songId: props.songId
+    })
+  }
   return (
     <View
       style={[
@@ -22,7 +31,7 @@ function SongItem(props) {
           pressed ? styles.buttonPressed : null,
         ]}
         androind_ripple={{ color: "#ccc" }}
-        onPress={props.onPress}
+        onPress={selectedSongHandler}
       >
         <View style={styles.rowContainer}>
           <Image style={styles.image} source={{ uri: props.imageUrl }} />
